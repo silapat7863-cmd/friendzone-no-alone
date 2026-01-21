@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FriendZone No Alone!! อิอิ :p</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'IBM Plex Sans Thai', sans-serif;
+            background-color: #f8faf5; /* Off-white green tint */
+            color: #334155;
+        }
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s ease;
+        }
+        .cozy-text {
+            color: #2d6a4f; /* Forest Green */
+        }
+        .input-cozy {
+            background-color: #f1f5f9;
+            border: 2px solid transparent;
+            color: #1e293b;
+            border-radius: 1rem;
+            transition: all 0.2s;
+        }
+        .input-cozy:focus {
+            outline: none;
+            border-color: #b7e4c7;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(183, 228, 199, 0.3);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-size: 1rem;
+        }
+        .btn-primary {
+            background-color: #40916c;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2d6a4f;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background-color: #d8e2dc;
+            color: #2d6a4f;
+        }
+        .btn-secondary:hover {
+            background-color: #b7e4c7;
+        }
+        .btn-danger {
+            background-color: #fee2e2;
+            color: #ef4444;
+        }
+        .btn-danger:hover {
+            background-color: #fecaca;
+        }
+        .btn-mode {
+            background-color: #f1f5f9;
+            color: #64748b;
+            flex-grow: 1;
+        }
+        .btn-mode.active {
+            background-color: #40916c;
+            color: white;
+        }
+        .btn-quiz {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #4a4a4a;
+            border-radius: 2rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(255, 154, 158, 0.3);
+        }
+        
+        /* Animation Overlay */
+        #animationOverlay { background-color: rgba(255, 255, 255, 0.9); }
+        .spinner-column span { color: #40916c; font-size: 2rem; }
+        @keyframes spin { from { transform: translateY(-90%); } to { transform: translateY(0%); } }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-6xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl sm:text-5xl font-bold cozy-text">FriendZone No Alone!! อิอิ :p</h1>
+            <p class="text-gray-500 mt-3 text-lg">มาแบ่งกลุ่มแบบอบอุ่นหัวใจกันเถอะ 🌱</p>
+            <div class="mt-6">
+                <a href="quiz.html" target="_blank" class="btn btn-quiz">
+                    ✨ ไปทำควิซกัน!
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card space-y-5">
+                <h2 class="text-xl font-bold cozy-text border-b border-gray-100 pb-3">1. ใส่ข้อมูลเพื่อนๆ</h2>
+                <div class="flex space-x-2 bg-slate-100 p-1.5 rounded-2xl">
+                    <button id="mainModeByNumberBtn" class="btn btn-mode">สุ่มตามเลขที่</button>
+                    <button id="mainModeByNameBtn" class="btn btn-mode">สุ่มตามรายชื่อ</button>
+                </div>
+
+                <div id="numberModeContainer" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">เริ่มจากเลขที่:</label>
+                            <input type="number" id="startNumber" value="1" class="input-cozy w-full p-3">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1">ถึงเลขที่:</label>
+                            <input type="number" id="endNumber" value="20" class="input-cozy w-full p-3">
+                        </div>
+                    </div>
+                    <button id="generateListBtn" class="btn btn-secondary w-full">อัปเดตรายชื่อ</button>
+                    <div id="studentListContainer">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-semibold text-gray-700">ใครมาบ้างเอ่ย?</h3>
+                            <div class="space-x-2">
+                                <button id="selectAllBtn" class="text-xs text-green-600 font-bold">เลือกหมด</button>
+                                <button id="deselectAllBtn" class="text-xs text-gray-400">เอาออกหมด</button>
+                            </div>
+                        </div>
+                        <div id="studentList" class="grid grid-cols-5 sm:grid-cols-8 gap-2"></div>
+                    </div>
+                </div>
+
+                <div id="nameModeContainer" class="hidden space-y-2">
+                    <label class="block text-sm font-medium text-gray-600">ใส่ชื่อเพื่อนๆ (1 คนต่อ 1 บรรทัด):</label>
+                    <textarea id="nameInput" rows="8" class="input-cozy w-full p-3" placeholder="น้องกอไก่&#10;น้องขอไข่"></textarea>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="card space-y-5">
+                    <h2 class="text-xl font-bold cozy-text border-b border-gray-100 pb-3">2. ตั้งค่าการสุ่ม</h2>
+                    <div class="flex space-x-2 bg-slate-100 p-1.5 rounded-2xl">
+                         <button id="subModeByGroupCountBtn" class="btn btn-mode">จำนวนกลุ่ม</button>
+                         <button id="subModeByMemberCountBtn" class="btn btn-mode">จำนวนคน/กลุ่ม</button>
+                    </div>
+                    <div>
+                        <label id="countLabel" class="block text-sm font-medium text-gray-600 mb-1">ต้องการกี่กลุ่มดีคะ:</label>
+                        <input type="number" id="countInput" value="4" class="input-cozy w-full p-3">
+                    </div>
+                    <button id="randomizeBtn" class="btn btn-primary w-full text-lg shadow-lg shadow-green-200">
+                        🌿 เริ่มสุ่มเลย!
+                    </button>
+                    <button id="resetBtn" class="btn btn-danger w-full text-sm">
+                        ล้างข้อมูลใหม่
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <h2 class="text-xl font-bold cozy-text border-b border-gray-100 pb-3">3. ผลลัพธ์ที่ได้</h2>
+                    <div id="results" class="grid grid-cols-1 gap-4 mt-4">
+                         <p class="text-gray-400 text-center">รอผลสุ่มอยู่น้า...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="animationOverlay" class="hidden fixed inset-0 flex-col items-center justify-center z-50 p-4">
+        <div id="spinnerContainer" class="spinner-container flex space-x-4"></div>
+        <p class="text-green-700 text-2xl mt-8 font-bold animate-pulse">กำลังจัดกลุ่มให้เพื่อนๆ... 🌱</p>
+    </div>
+
+    <script>
+        // JS logic remains identical to original but with updated UI interactions
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = {
+                mainModeByNumberBtn: document.getElementById('mainModeByNumberBtn'),
+                mainModeByNameBtn: document.getElementById('mainModeByNameBtn'),
+                numberModeContainer: document.getElementById('numberModeContainer'),
+                nameModeContainer: document.getElementById('nameModeContainer'),
+                nameInput: document.getElementById('nameInput'),
+                startNumberEl: document.getElementById('startNumber'),
+                endNumberEl: document.getElementById('endNumber'),
+                generateListBtn: document.getElementById('generateListBtn'),
+                studentListEl: document.getElementById('studentList'),
+                selectAllBtn: document.getElementById('selectAllBtn'),
+                deselectAllBtn: document.getElementById('deselectAllBtn'),
+                subModeByGroupCountBtn: document.getElementById('subModeByGroupCountBtn'),
+                subModeByMemberCountBtn: document.getElementById('subModeByMemberCountBtn'),
+                countInputEl: document.getElementById('countInput'),
+                countLabelEl: document.getElementById('countLabel'),
+                randomizeBtn: document.getElementById('randomizeBtn'),
+                resetBtn: document.getElementById('resetBtn'),
+                resultsEl: document.getElementById('results'),
+                animationOverlay: document.getElementById('animationOverlay'),
+                spinnerContainer: document.getElementById('spinnerContainer')
+            };
+
+            let mainMode = 'byNumber';
+            let subMode = 'byGroupCount';
+
+            const setMainMode = (mode) => {
+                mainMode = mode;
+                if (mode === 'byNumber') {
+                    elements.mainModeByNumberBtn.classList.add('active');
+                    elements.mainModeByNameBtn.classList.remove('active');
+                    elements.numberModeContainer.classList.remove('hidden');
+                    elements.nameModeContainer.classList.add('hidden');
+                } else {
+                    elements.mainModeByNameBtn.classList.add('active');
+                    elements.mainModeByNumberBtn.classList.remove('active');
+                    elements.nameModeContainer.classList.remove('hidden');
+                    elements.numberModeContainer.classList.add('hidden');
+                }
+            };
+
+            const setSubMode = (mode) => {
+                subMode = mode;
+                if (mode === 'byGroupCount') {
+                    elements.countLabelEl.textContent = 'ต้องการกี่กลุ่มดีคะ:';
+                    elements.subModeByGroupCountBtn.classList.add('active');
+                    elements.subModeByMemberCountBtn.classList.remove('active');
+                } else {
+                    elements.countLabelEl.textContent = 'อยากให้มีกี่คนต่อกลุ่มคะ:';
+                    elements.subModeByMemberCountBtn.classList.add('active');
+                    elements.subModeByGroupCountBtn.classList.remove('active');
+                }
+            };
+
+            const generateStudentCheckboxes = () => {
+                elements.studentListEl.innerHTML = '';
+                const start = parseInt(elements.startNumberEl.value);
+                const end = parseInt(elements.endNumberEl.value);
+                if (isNaN(start) || isNaN(end) || start > end) return;
+
+                for (let i = start; i <= end; i++) {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-center p-2 rounded-xl cursor-pointer transition-all border border-gray-100 text-sm font-bold';
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.value = i;
+                    cb.checked = true;
+                    cb.className = 'hidden';
+                    
+                    const lbl = document.createElement('span');
+                    lbl.textContent = i;
+                    
+                    div.appendChild(cb);
+                    div.appendChild(lbl);
+                    
+                    const updateStyle = () => {
+                        if (cb.checked) {
+                            div.className = 'flex items-center justify-center p-2 rounded-xl cursor-pointer transition-all bg-green-100 text-green-700 border-green-200 text-sm font-bold';
+                        } else {
+                            div.className = 'flex items-center justify-center p-2 rounded-xl cursor-pointer transition-all bg-gray-50 text-gray-300 border-transparent text-sm font-medium';
+                        }
+                    };
+
+                    div.onclick = () => { cb.checked = !cb.checked; updateStyle(); };
+                    updateStyle();
+                    elements.studentListEl.appendChild(div);
+                }
+            };
+
+            const shuffle = (array) => array.sort(() => Math.random() - 0.5);
+
+            const displayResults = (groups) => {
+                elements.resultsEl.innerHTML = '';
+                groups.forEach((group, i) => {
+                    const card = document.createElement('div');
+                    card.className = 'p-4 rounded-2xl bg-green-50 border border-green-100';
+                    card.innerHTML = `<h3 class="font-bold text-green-800 mb-2">กลุ่มที่ ${i + 1} 🏡</h3>`;
+                    const list = document.createElement('div');
+                    list.className = 'flex flex-wrap gap-2';
+                    group.forEach(m => {
+                        const chip = document.createElement('span');
+                        chip.className = 'px-3 py-1 bg-white border border-green-200 text-green-700 rounded-full text-xs font-semibold shadow-sm';
+                        chip.textContent = mainMode === 'byNumber' ? `เลขที่ ${m}` : m;
+                        list.appendChild(chip);
+                    });
+                    card.appendChild(list);
+                    elements.resultsEl.appendChild(card);
+                });
+            };
+
+            const handleRandomize = () => {
+                let participants = [];
+                if (mainMode === 'byNumber') {
+                    participants = Array.from(elements.studentListEl.querySelectorAll('input:checked')).map(c => c.value);
+                } else {
+                    participants = elements.nameInput.value.split('\n').map(n => n.trim()).filter(n => n);
+                }
+
+                if (participants.length === 0) return alert('ใส่รายชื่อก่อนน้าา');
+
+                elements.animationOverlay.classList.remove('hidden');
+                elements.animationOverlay.classList.add('flex');
+
+                setTimeout(() => {
+                    const shuffled = shuffle([...participants]);
+                    const count = parseInt(elements.countInputEl.value);
+                    let groups = [];
+                    
+                    if (subMode === 'byGroupCount') {
+                        groups = Array.from({ length: count }, () => []);
+                        shuffled.forEach((p, i) => groups[i % count].push(p));
+                    } else {
+                        for (let i = 0; i < shuffled.length; i += count) {
+                            groups.push(shuffled.slice(i, i + count));
+                        }
+                    }
+                    
+                    displayResults(groups);
+                    elements.animationOverlay.classList.add('hidden');
+                }, 1500);
+            };
+
+            elements.mainModeByNumberBtn.onclick = () => setMainMode('byNumber');
+            elements.mainModeByNameBtn.onclick = () => setMainMode('byName');
+            elements.subModeByGroupCountBtn.onclick = () => setSubMode('byGroupCount');
+            elements.subModeByMemberCountBtn.onclick = () => setSubMode('byMemberCount');
+            elements.generateListBtn.onclick = generateStudentCheckboxes;
+            elements.randomizeBtn.onclick = handleRandomize;
+            elements.resetBtn.onclick = () => location.reload();
+            elements.selectAllBtn.onclick = () => {
+                elements.studentListEl.querySelectorAll('input').forEach(i => { i.checked = true; i.parentElement.click(); i.checked = true; });
+            };
+            elements.deselectAllBtn.onclick = () => {
+                elements.studentListEl.querySelectorAll('input').forEach(i => { i.checked = false; i.parentElement.click(); i.checked = false; });
+            };
+
+            generateStudentCheckboxes();
+            setMainMode('byNumber');
+            setSubMode('byGroupCount');
+        });
+    </script>
+</body>
+</html>
